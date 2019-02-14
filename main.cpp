@@ -8,10 +8,11 @@ struct Color {
     int b;
 };
 
-const int MAX = 512;
+const int MAX = 2000;
 const int WIDTH = 512;
 const int HEIGHT = 512;
-const float ZOOM_STEP = 1.8;
+const float ZOOM_STEP = 1.5;
+const int MIN_ZOOM = 1000;
 const int IMAGES = 30;
 
 void Mandelbrot(double, double, double);
@@ -20,7 +21,7 @@ Color ColorOf(int);
 
 int main()
 {
-    double zoom = 100, tX = 0.31, tY = 0.03;
+    double zoom = MIN_ZOOM, tX = 0.31, tY = 0.03;
     for (int i = 0; i < IMAGES; i++)
     {
         Mandelbrot(zoom, tX, tY);
