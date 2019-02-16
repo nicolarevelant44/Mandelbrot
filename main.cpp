@@ -23,7 +23,7 @@ const int IMAGES = 30;
 Color color;
 const string PATH = "MB/";
 
-void Mandelbrot(double, double, double);
+bool Mandelbrot(double, double, double);
 Color ColorOf(int);
 
 
@@ -34,7 +34,7 @@ int main()
     {
         cout << "ELABORAZIONE MANDELBROT " << i+1 << "/" << IMAGES << " ZOOM " << to_string(zoom) << "\n\n";
         cout << "Aspetta...";
-        Mandelbrot(zoom, tX, tY);
+        if (!Mandelbrot(zoom, tX, tY)) return -1;
         zoom *= ZOOM_STEP;
     }
     return 0;
@@ -43,7 +43,7 @@ int main()
 /*
  Salva su file un frattale di Mandelbrot con zoom e traslazione
  */
-void Mandelbrot(double zoom, double tX, double tY)
+bool Mandelbrot(double zoom, double tX, double tY)
 {
     ofstream imgS;
     string fileName;
@@ -53,7 +53,11 @@ void Mandelbrot(double zoom, double tX, double tY)
     float halfWidth = WIDTH / 2.0, halfHeight = HEIGHT / 2.0;
     fileName = PATH + "M_" + to_string(WIDTH) + "_" + to_string(HEIGHT) + "_zoom_" + to_string(zoom) + "_.ppm";
     imgS.open(fileName);
-    
+    if (!imgS.is_open())
+    {
+        cout << "\rERRORE CREAZIONE FILE " << fileName << "\n";
+        return false;
+    }
     // intestazione
     imgS << "P3" << endl << WIDTH << " " << HEIGHT << endl << 255 << endl;
     
@@ -102,6 +106,7 @@ void Mandelbrot(double zoom, double tX, double tY)
     
     // chiusura stream
     imgS.close();
+    return true;
 }
 
 Color ColorOf(int c)
