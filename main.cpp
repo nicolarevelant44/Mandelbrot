@@ -1,5 +1,11 @@
+/*
+ * This program save IMAGES Mandelbrot's fractals on PPM format
+ * Questo programma salva IMAGES frattali di Mandelbrot in formato PPM
+ */
+
 #include <iostream>
 #include <fstream>
+#include <sstream>
 using namespace std;
 
 struct Color {
@@ -11,9 +17,11 @@ struct Color {
 const int MAX = 400;
 const int WIDTH = 1024;
 const int HEIGHT = 1024;
-const float ZOOM_STEP = 1.5;
+const float ZOOM_STEP = 1.2;
 const int MIN_ZOOM = 10000;
 const int IMAGES = 30;
+Color color;
+const string PATH = "MB/";
 
 void Mandelbrot(double, double, double);
 Color ColorOf(int);
@@ -21,9 +29,11 @@ Color ColorOf(int);
 
 int main()
 {
-    double zoom = MIN_ZOOM, tX = 0.31, tY = 0.03;
+    double zoom = MIN_ZOOM, tX = 0.310004, tY = 0.03;
     for (int i = 0; i < IMAGES; i++)
     {
+        cout << "ELABORAZIONE MANDELBROT " << i+1 << "/" << IMAGES << " ZOOM " << to_string(zoom) << "\n\n";
+        cout << "Aspetta...";
         Mandelbrot(zoom, tX, tY);
         zoom *= ZOOM_STEP;
     }
@@ -36,16 +46,16 @@ int main()
 void Mandelbrot(double zoom, double tX, double tY)
 {
     ofstream imgS;
+    string fileName;
     int livelli, avanz;
     Color color;
     double realX, realY, xc, yc, xx, yy;
     float halfWidth = WIDTH / 2.0, halfHeight = HEIGHT / 2.0;
-    imgS.open("mandelbrot_zoom_" + to_string(zoom) + "_.ppm");
+    fileName = PATH + "M_" + to_string(WIDTH) + "_" + to_string(HEIGHT) + "_zoom_" + to_string(zoom) + "_.ppm";
+    imgS.open(fileName);
+    
     // intestazione
-    imgS << "P3" << endl;
-    imgS << WIDTH << " " << HEIGHT << endl << 255 << endl;
-    cout << "ELABORAZIONE MANDELBROT ZOOM " << zoom << "\n\n";
-    cout << "Aspetta...";
+    imgS << "P3" << endl << WIDTH << " " << HEIGHT << endl << 255 << endl;
     
     
     // scansione immagine e salvataggio
@@ -76,7 +86,7 @@ void Mandelbrot(double zoom, double tX, double tY)
             }
             // fine algoritmo
             
-            color = ColorOf(livelli * 128 / MAX);
+            color = ColorOf(livelli);
             imgS << color.r << " " << color.g << " " << color.b << " ";
         }
         imgS << endl;
@@ -96,17 +106,13 @@ void Mandelbrot(double zoom, double tX, double tY)
 
 Color ColorOf(int c)
 {
-    int r, g, b;
-    double t = (double)c/(double)MAX;
-    Color color;
+    double t = (double)c / (double)MAX;
     
     // algoritmo colore
-    r = (int)(9*(1-t)*t*t*t*255);
-    g = (int)(15*(1-t)*(1-t)*t*t*255);
-    b = (int)(8.5*(1-t)*(1-t)*(1-t)*t*255);
+    color.r = 9*(1-t)*t*t*t*255;
+    color.g = 15*(1-t)*(1-t)*t*t*255;
+    color.b = 8.5*(1-t)*(1-t)*(1-t)*t*255;
     // fine algoritmo colore
-    color.r = r;
-    color.g = g;
-    color.b = b;
+    
     return color;
 }
