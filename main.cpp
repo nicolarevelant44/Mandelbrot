@@ -13,23 +13,23 @@ struct Color {
     int g;
     int b;
 };
-
-const int MAX = 400;
-const int WIDTH = 1024;
-const int HEIGHT = 1024;
-const float ZOOM_STEP = 1.2;
-const int MIN_ZOOM = 10000;
-const int IMAGES = 30;
 Color color;
+
+const int MAX = 500;
+const int WIDTH = 500;
+const int HEIGHT = 500;
+const float ZOOM_STEP = 1.2;
+const long double MIN_ZOOM = 20000000;
+const int IMAGES = 20;
 const string PATH = "MB/";
 
-bool Mandelbrot(double, double, double);
+bool Mandelbrot(long double, long double, long double);
 Color ColorOf(int);
 
 
 int main()
 {
-    double zoom = MIN_ZOOM, tX = 0.310004, tY = 0.03;
+    long double zoom = MIN_ZOOM, tX = -0.203637665486886, tY = 0.837731935118791;
     for (int i = 0; i < IMAGES; i++)
     {
         cout << "ELABORAZIONE MANDELBROT " << i+1 << "/" << IMAGES << " ZOOM " << to_string(zoom) << "\n\n";
@@ -43,13 +43,13 @@ int main()
 /*
  Salva su file un frattale di Mandelbrot con zoom e traslazione
  */
-bool Mandelbrot(double zoom, double tX, double tY)
+bool Mandelbrot(long double zoom, long double tX, long double tY)
 {
     ofstream imgS;
     string fileName;
     int livelli, avanz;
     Color color;
-    double realX, realY, xc, yc, xx, yy;
+    long double realX, realY, xc, yc, xx, yy;
     float halfWidth = WIDTH / 2.0, halfHeight = HEIGHT / 2.0;
     fileName = PATH + "M_" + to_string(WIDTH) + "_" + to_string(HEIGHT) + "_zoom_" + to_string(zoom) + "_.ppm";
     imgS.open(fileName);
@@ -73,9 +73,7 @@ bool Mandelbrot(double zoom, double tX, double tY)
             // xc e xx sono variabili di calcolo
             
             realX = (x - halfWidth) / zoom + tX;
-            realY = (y - halfHeight) / zoom + tY;
-            
-            livelli = 0;
+            realY = (y - halfHeight) / zoom - tY;
             xc = realX;
             yc = realY;
 
@@ -84,7 +82,7 @@ bool Mandelbrot(double zoom, double tX, double tY)
             {
                 xx = xc * xc;
                 yy = yc * yc;
-                if (xx + yy > 4.0) break;
+                if (xx + yy > 4) break;
                 yc = 2.0 * xc * yc + realY;
                 xc = xx - yy + realX;
             }
