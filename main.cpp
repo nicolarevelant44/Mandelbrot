@@ -8,11 +8,11 @@ struct Color {
     int b;
 };
 
-const int MAX = 2000;
-const int WIDTH = 512;
-const int HEIGHT = 512;
+const int MAX = 400;
+const int WIDTH = 1024;
+const int HEIGHT = 1024;
 const float ZOOM_STEP = 1.5;
-const int MIN_ZOOM = 1000;
+const int MIN_ZOOM = 10000;
 const int IMAGES = 30;
 
 void Mandelbrot(double, double, double);
@@ -97,47 +97,14 @@ void Mandelbrot(double zoom, double tX, double tY)
 Color ColorOf(int c)
 {
     int r, g, b;
-    if (c >= 128) // MAX = 128
-    {
-        r = 0;
-        g = 0;
-        b = 0;
-    }
-    else if (c == 0)
-    {
-        r = 255;
-        g = 0;
-        b = 0;
-    }
-    else if (c < 16)
-    {
-        // 1 - 15
-        r = 16 * (16 - c);
-        g = 0;
-        b = 16 * c - 1;
-    }
-    else if (c < 32)
-    {
-        // 16 - 31
-        r = 0;
-        g = 16 * (c - 16);
-        b = 16 * (32 - c) - 1;
-    }
-    else if (c < 64)
-    {
-        // 32 - 63
-        r = 8 * (c - 32);
-        g = 8 * (64 - c) - 1;
-        b = 0;
-    }
-    else
-    {
-        // 64 - 127
-        r = 255 - (c - 64);
-        g = 0;
-        b = 0;
-    }
+    double t = (double)c/(double)MAX;
     Color color;
+    
+    // algoritmo colore
+    r = (int)(9*(1-t)*t*t*t*255);
+    g = (int)(15*(1-t)*(1-t)*t*t*255);
+    b = (int)(8.5*(1-t)*(1-t)*(1-t)*t*255);
+    // fine algoritmo colore
     color.r = r;
     color.g = g;
     color.b = b;
